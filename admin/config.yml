@@ -8,36 +8,20 @@ public_folder: "/assets/uploads"
 collections:
   - name: "lorebook"
     label: "Lore Book"
+    delete: false
+    editor:
+      preview: false
     files:
-      - name: "pages"
-        label: "Pages"
-        file: "content/lore/pages.json"
+      - file: "content/lore/book.json"
+        label: "Book Pages"
+        name: "book"
         format: "json"
         fields:
           - label: "Pages"
             name: "pages"
             widget: "list"
-            summary: "PG {{fields.pg}}"
+            summary: "Spread {{fields.left | truncate(40)}}"
+            allow_add: true
             fields:
-              - { label: "PG", name: "pg", widget: "number", value_type: "int", min: 1 }
-              - label: "Blocks"
-                name: "blocks"
-                widget: "list"
-                summary: "{{fields.type}} • {{fields.side}}"
-                fields:
-                  - label: "Type"
-                    name: "type"
-                    widget: "select"
-                    options:
-                      - { label: "Text", value: "text" }
-                      - { label: "Image", value: "image" }
-                      - { label: "Video", value: "video" }
-                  - label: "Side"
-                    name: "side"
-                    widget: "select"
-                    options:
-                      - { label: "Left", value: "left" }
-                      - { label: "Right", value: "right" }
-                  - { label: "Text", name: "text", widget: "text", required: false }
-                  - { label: "Media File", name: "src", widget: "file", required: false }
-                  - { label: "Caption", name: "caption", widget: "string", required: false }
+              - { label: "Left Page", name: "left", widget: "text" }
+              - { label: "Right Page", name: "right", widget: "text" }

@@ -4,8 +4,34 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Swordahl Admin</title>
+    <style>
+      html,body{margin:0;height:100%;background:#0b0b0f;color:#eaeaf2;font-family:ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;}
+      .hint{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center}
+      .hint p{max-width:720px;line-height:1.5;opacity:.8}
+    </style>
   </head>
   <body>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <div class="hint">
+      <div>
+        <h2>Swordahl Admin</h2>
+        <p>If you see this, Netlify CMS is loading. If it doesn't load, make sure Netlify Identity + Git Gateway are enabled in your Netlify site settings.</p>
+      </div>
+    </div>
+
+    <!-- Netlify Identity (login) -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <!-- Netlify CMS -->
+    <script src="https://unpkg.com/netlify-cms@^2.10.0/dist/netlify-cms.js"></script>
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", (user) => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
   </body>
 </html>
