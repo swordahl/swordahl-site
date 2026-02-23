@@ -1,184 +1,262 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Lore — Swordahl</title>
-  <link rel="stylesheet" href="styles.css"/>
-  <style>
-    body{overflow:hidden;}
-    .lore-wrap{position:fixed;inset:0;display:grid;place-items:center;}
-    .lore-img{width:100vw;height:100vh;object-fit:contain;user-select:none;pointer-events:none;}
-    .hud{position:fixed;inset:0;pointer-events:none;}
-    .back-btn{
-      position:absolute;left:22px;top:22px;
-      pointer-events:auto;
-      display:inline-flex;align-items:center;gap:10px;
-      padding:10px 14px;border:3px solid rgba(230,230,240,.85);
-      background:rgba(14,14,18,.72);
-      color:#f1f1ff;text-decoration:none;
-      font-weight:700;letter-spacing:.08em;
-      text-transform:uppercase;
-      box-shadow:0 0 0 2px rgba(0,0,0,.55) inset, 0 0 18px rgba(160,90,255,.35);
-      border-radius:0;
-      image-rendering:pixelated;
-      font-family:ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-    }
-    .back-btn:hover{filter:drop-shadow(0 0 10px rgba(160,90,255,.55));}
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Lore — Swordahl</title>
+<link rel="stylesheet" href="styles.css"/>
 
-    /* Text areas (relative to viewport) — tuned to your marked screenshot */
-    .pageText{
-      position:absolute;
-      pointer-events:none;
-      color:rgba(245,245,255,.92);
-      font-size:16px;
-      line-height:1.45;
-      white-space:pre-wrap;
-      text-shadow:0 0 10px rgba(140,90,255,.35);
-      max-height:46vh;
-      overflow:hidden;
-      width:28vw;
-      font-family:ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-    }
-    /* left page box */
-    #leftText{left:18%; top:30%; width:27vw; max-width:520px;}
-    /* right page box */
-    #rightText{left:58%; top:30%; width:27vw; max-width:520px;}
+<style>
+body{overflow:hidden;}
 
-    .navHit{
-      position:absolute;
-      pointer-events:auto;
-      background:transparent;
-      border:none;
-      cursor:inherit; /* keep custom cursor */
-    }
-    #prevBtn{left:22%; top:78%; width:10vw; height:10vh;}
-    #nextBtn{left:68%; top:78%; width:10vw; height:10vh;}
+.lore-wrap{
+  position:fixed;
+  inset:0;
+  display:grid;
+  place-items:center;
+}
 
-    .navGlyph{
-      position:absolute;
-      pointer-events:none;
-      font-size:20px;
-      color:rgba(240,240,255,.75);
-      text-shadow:0 0 8px rgba(160,90,255,.55);
-      font-family:ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      letter-spacing:.08em;
-      opacity:.65;
-    }
-    #prevGlyph{left:24%; top:82%;}
-    #nextGlyph{left:70%; top:82%;}
+.lore-img{
+  width:100vw;
+  height:100vh;
+  object-fit:contain;
+  user-select:none;
+  pointer-events:none;
+}
 
-    .pageNum{
-      position:absolute;
-      pointer-events:none;
-      left:50%; top:88%;
-      transform:translateX(-50%);
-      color:rgba(240,240,255,.82);
-      font-size:14px;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-      text-shadow:0 0 10px rgba(160,90,255,.45);
-      font-family:ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-    }
+.hud{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
 
-    /* Small screens: tighten */
-    @media (max-width: 720px){
-      .pageText{font-size:13px;}
-      #leftText{left:10%; width:36vw;}
-      #rightText{left:54%; width:36vw;}
-      #prevBtn{left:14%; width:18vw;}
-      #nextBtn{left:68%; width:18vw;}
-      .pageNum{top:90%;}
-    }
-  </style>
+.back-btn{
+  position:absolute;
+  left:22px;
+  top:22px;
+  pointer-events:auto;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border:3px solid rgba(230,230,240,.85);
+  background:rgba(14,14,18,.72);
+  color:#f1f1ff;
+  text-decoration:none;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  box-shadow:0 0 0 2px rgba(0,0,0,.55) inset, 0 0 18px rgba(160,90,255,.35);
+  border-radius:0;
+  image-rendering:pixelated;
+  font-family:ui-monospace, Menlo, Monaco, Consolas, monospace;
+}
+
+.back-btn:hover{
+  filter:drop-shadow(0 0 10px rgba(160,90,255,.55));
+}
+
+.pageText{
+  position:absolute;
+  pointer-events:none;
+  color:rgba(245,245,255,.92);
+  font-size:16px;
+  line-height:1.45;
+  white-space:pre-wrap;
+  text-shadow:0 0 10px rgba(140,90,255,.35);
+  max-height:46vh;
+  overflow:auto;
+  width:28vw;
+  font-family:ui-monospace, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Media auto-fit */
+.pageText img,
+.pageText video{
+  max-width:100%;
+  height:auto;
+  display:block;
+  margin:12px 0;
+}
+
+.pageText audio{
+  width:100%;
+  margin:12px 0;
+}
+
+#leftText{left:18%; top:30%; max-width:520px;}
+#rightText{left:58%; top:30%; max-width:520px;}
+
+.navHit{
+  position:absolute;
+  pointer-events:auto;
+  background:transparent;
+  border:none;
+  cursor:inherit;
+}
+
+#prevBtn{left:22%; top:78%; width:10vw; height:10vh;}
+#nextBtn{left:68%; top:78%; width:10vw; height:10vh;}
+
+.navGlyph{
+  position:absolute;
+  pointer-events:none;
+  font-size:20px;
+  color:rgba(240,240,255,.75);
+  text-shadow:0 0 8px rgba(160,90,255,.55);
+  letter-spacing:.08em;
+  opacity:.65;
+  font-family:ui-monospace, Menlo, Monaco, Consolas, monospace;
+}
+
+#prevGlyph{left:24%; top:82%;}
+#nextGlyph{left:70%; top:82%;}
+
+.pageNum{
+  position:absolute;
+  left:50%;
+  top:88%;
+  transform:translateX(-50%);
+  color:rgba(240,240,255,.82);
+  font-size:14px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  text-shadow:0 0 10px rgba(160,90,255,.45);
+  font-family:ui-monospace, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Mobile tighten */
+@media (max-width:720px){
+  .pageText{font-size:13px;}
+  #leftText{left:10%; width:36vw;}
+  #rightText{left:54%; width:36vw;}
+  #prevBtn{left:14%; width:18vw;}
+  #nextBtn{left:68%; width:18vw;}
+}
+</style>
 </head>
+
 <body>
-  <div class="lore-wrap">
-    <img class="lore-img" src="assets/lore.png" alt="Lore Page"/>
-  </div>
 
-  <div class="hud">
-    <a class="back-btn" href="index.html">← BACK</a>
+<div class="lore-wrap">
+  <img class="lore-img" src="assets/lore.png" alt="Lore Page"/>
+</div>
 
-    <div id="leftText" class="pageText"></div>
-    <div id="rightText" class="pageText"></div>
+<div class="hud">
 
-    <button id="prevBtn" class="navHit" aria-label="Previous page"></button>
-    <button id="nextBtn" class="navHit" aria-label="Next page"></button>
+  <a class="back-btn" href="index.html">← BACK</a>
 
-    <div id="prevGlyph" class="navGlyph">◀</div>
-    <div id="nextGlyph" class="navGlyph">▶</div>
+  <div id="leftText" class="pageText"></div>
+  <div id="rightText" class="pageText"></div>
 
-    <div id="pageNum" class="pageNum">PAGE 1</div>
-  </div>
+  <button id="prevBtn" class="navHit"></button>
+  <button id="nextBtn" class="navHit"></button>
 
-  <audio id="pageTurnSfx" preload="auto" src="assets/sfx/page-turn.mp3"></audio>
+  <div id="prevGlyph" class="navGlyph">◀</div>
+  <div id="nextGlyph" class="navGlyph">▶</div>
 
-  <script src="script.js"></script>
-  <script>
-    const bookUrl = "content/lore/book.json";
-    const leftEl = document.getElementById("leftText");
-    const rightEl = document.getElementById("rightText");
-    const pageNumEl = document.getElementById("pageNum");
-    const sfx = document.getElementById("pageTurnSfx");
+  <div id="pageNum" class="pageNum">PAGE 1</div>
 
-    let spreads = [];
-    let idx = 0;
+</div>
 
-    function safePlaySfx(){
-      try{ sfx.currentTime = 0; sfx.play().catch(()=>{}); }catch(e){}
-    }
+<audio id="pageTurnSfx" preload="auto" src="assets/sfx/page-turn.mp3"></audio>
 
-    function render(){
-      if(!spreads.length){
-        leftEl.textContent = "";
-        rightEl.textContent = "";
-        pageNumEl.textContent = "PAGE 1";
-        return;
-      }
-      const s = spreads[idx] || {left:"", right:""};
-      leftEl.textContent = s.left || "";
-      rightEl.textContent = s.right || "";
-      pageNumEl.textContent = "PAGE " + (idx + 1) + " / " + spreads.length;
-    }
+<script>
 
-    async function loadBook(){
-      try{
-        const res = await fetch(bookUrl + "?t=" + Date.now());
-        const data = await res.json();
-        spreads = Array.isArray(data.pages) ? data.pages : [];
-        idx = Math.max(0, Math.min(idx, spreads.length - 1));
-        render();
-      }catch(e){
-        spreads = [{left:"(Lore book not found. Create it in /admin.)", right:""}];
-        idx = 0;
-        render();
-      }
-    }
+const bookUrl = "content/lore/book.json";
+const leftEl = document.getElementById("leftText");
+const rightEl = document.getElementById("rightText");
+const pageNumEl = document.getElementById("pageNum");
+const sfx = document.getElementById("pageTurnSfx");
 
-    function prev(){
-      if(!spreads.length) return;
-      idx = (idx - 1 + spreads.length) % spreads.length;
-      safePlaySfx();
-      render();
-    }
-    function next(){
-      if(!spreads.length) return;
-      idx = (idx + 1) % spreads.length;
-      safePlaySfx();
-      render();
-    }
+let spreads = [];
+let idx = 0;
 
-    document.getElementById("prevBtn").addEventListener("click", prev);
-    document.getElementById("nextBtn").addEventListener("click", next);
+/* Smart media renderer */
+function renderContent(content){
+  if(!content) return "";
 
-    // keyboard arrows
-    window.addEventListener("keydown", (e)=>{
-      if(e.key === "ArrowLeft") prev();
-      if(e.key === "ArrowRight") next();
-    });
+  // If user already inserted HTML
+  if(content.includes("<")) return content;
 
-    loadBook();
-  </script>
+  const ext = content.split(".").pop().toLowerCase();
+
+  if(["png","jpg","jpeg","webp","gif","svg"].includes(ext)){
+    return `<img src="${content}">`;
+  }
+
+  if(["mp3","wav","ogg"].includes(ext)){
+    return `<audio controls src="${content}"></audio>`;
+  }
+
+  if(["mp4","webm"].includes(ext)){
+    return `<video controls src="${content}"></video>`;
+  }
+
+  return content;
+}
+
+function safePlaySfx(){
+  try{ sfx.currentTime=0; sfx.play().catch(()=>{});}catch(e){}
+}
+
+function render(){
+  if(!spreads.length){
+    leftEl.innerHTML="";
+    rightEl.innerHTML="";
+    pageNumEl.textContent="PAGE 1";
+    return;
+  }
+
+  const s = spreads[idx] || {left:"", right:""};
+
+  leftEl.innerHTML = renderContent(s.left);
+  rightEl.innerHTML = renderContent(s.right);
+
+  pageNumEl.textContent = "PAGE " + (idx+1) + " / " + spreads.length;
+}
+
+async function loadBook(){
+  try{
+    const res = await fetch(bookUrl + "?t=" + Date.now());
+    const data = await res.json();
+    spreads = Array.isArray(data.pages) ? data.pages : [];
+    idx = 0;
+    render();
+  }catch(e){
+    spreads = [{
+      left:"(Create content/lore/book.json to begin.)",
+      right:""
+    }];
+    idx=0;
+    render();
+  }
+}
+
+function prev(){
+  if(!spreads.length) return;
+  idx=(idx-1+spreads.length)%spreads.length;
+  safePlaySfx();
+  render();
+}
+
+function next(){
+  if(!spreads.length) return;
+  idx=(idx+1)%spreads.length;
+  safePlaySfx();
+  render();
+}
+
+document.getElementById("prevBtn").addEventListener("click",prev);
+document.getElementById("nextBtn").addEventListener("click",next);
+
+window.addEventListener("keydown",(e)=>{
+  if(e.key==="ArrowLeft") prev();
+  if(e.key==="ArrowRight") next();
+});
+
+loadBook();
+
+</script>
 </body>
 </html>
