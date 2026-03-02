@@ -20,9 +20,18 @@ function safeText(t){
   return (t ?? "").toString();
 }
 
+/* ===========================
+   LINKIFY (NEW)
+=========================== */
+function linkify(text){
+  const urlPattern = /(https?:\/\/[^\s]+)/g;
+  return safeText(text).replace(urlPattern, function(url){
+    return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+  });
+}
+
 function normalizePages(raw){
   const arr = Array.isArray(raw?.pages) ? raw.pages : [];
-  // sort by pg numeric if provided, else keep order
   arr.sort((a,b)=> (Number(a.pg||0) - Number(b.pg||0)));
   return arr.map((p,i)=> ({
     pg: Number(p.pg || (i+1)),
@@ -52,7 +61,6 @@ function render(){
     host.appendChild(renderBlock(b));
   }
 
-  // If completely empty, show faint placeholder so user sees area
   if(!elLeft.children.length) elLeft.appendChild(placeholder());
   if(!elRight.children.length) elRight.appendChild(placeholder());
 }
@@ -72,15 +80,19 @@ function renderBlock(b){
   if(type === "text"){
     const p = document.createElement("div");
     p.className = "lore-text";
-    // preserve line breaks
-    p.textContent = safeText(b.text);
+
+    // 🔥 changed from textContent → innerHTML with linkify
+    p.innerHTML = linkify(b.text);
+
     wrap.appendChild(p);
+
     if(b.caption){
       const c = document.createElement("div");
       c.className = "lore-caption";
       c.textContent = safeText(b.caption);
       wrap.appendChild(c);
     }
+
     return wrap;
   }
 
@@ -92,12 +104,14 @@ function renderBlock(b){
     img.src = safeText(b.src);
     img.addEventListener("click", ()=> openMedia({kind:"image", src: img.src, caption: b.caption}));
     wrap.appendChild(img);
+
     if(b.caption){
       const c = document.createElement("div");
       c.className = "lore-caption";
       c.textContent = safeText(b.caption);
       wrap.appendChild(c);
     }
+
     return wrap;
   }
 
@@ -108,16 +122,17 @@ function renderBlock(b){
     btn.textContent = "PLAY";
     btn.addEventListener("click", ()=> openMedia({kind:"video", src: safeText(b.src), caption: b.caption}));
     wrap.appendChild(btn);
+
     if(b.caption){
       const c = document.createElement("div");
       c.className = "lore-caption";
       c.textContent = safeText(b.caption);
       wrap.appendChild(c);
     }
+
     return wrap;
   }
 
-  // fallback
   const p = document.createElement("div");
   p.className = "lore-text";
   p.textContent = safeText(b.text || "");
@@ -126,7 +141,6 @@ function renderBlock(b){
 }
 
 function openMedia(m){
-  // clear
   modalBody.innerHTML = "";
   modal.setAttribute("aria-hidden","false");
   modal.classList.add("open");
@@ -159,7 +173,6 @@ function openMedia(m){
 function closeModal(){
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden","true");
-  // stop video if any
   const v = modalBody.querySelector("video");
   if(v){ try{ v.pause(); }catch(e){} }
   modalBody.innerHTML = "";
@@ -191,7 +204,6 @@ function prev(){
     playTurn();
     render();
   }else{
-    // stay at pg 1
     playTurn();
   }
 }
@@ -199,7 +211,6 @@ function prev(){
 function next(){
   state.idx += 1;
   ensurePageExists(state.idx);
-  // auto assign pg numbers in sequence
   state.pages[state.idx].pg = state.idx + 1;
   playTurn();
   render();
